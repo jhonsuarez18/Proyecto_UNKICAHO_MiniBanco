@@ -1,0 +1,458 @@
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+$(document).ready(function () {
+    tablaCompra();
+    if(parseInt($('#idvi').val())===1){
+        $('#modal-dialog_add_compra').modal({show: true, backdrop:'static', keyboard: false});
+        getProveedor();
+        getProducto();
+    }
+});
+var tab = [];
+$("#addcompra").on('click', function () {
+    window.event.preventDefault();
+    $('#modal-dialog_add_compra').modal({show: true, backdrop:'static', keyboard: false});
+    getProveedor();
+    getProducto();
+});
+
+function getProveedor() {
+    var url = "/mantenimiento/getproveedor";
+    var select = $('#proveedor').html('');
+    var html = '<option value="0" selected="">SELECCIONE</option>';
+    $.ajax(
+        {
+            type: "GET",
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: '_token = <?php echo csrf_token() ?>',
+            success: function (data) {
+                var result = data['result'];
+                var htmla = '';
+                for (var i = 0; i < result.length; i++) {
+                    htmla = '<option value="' + result[i]['pvCod'] + '">' + result[i]['pvProv'] + '</option>';
+                    html = html + htmla;
+                }
+                select.append(html);
+            }
+
+        });
+}
+function getProducto() {
+    var url = "/mantenimiento/getproducto";
+    var select = $('#producto').html('');
+    var html = '<option value="0" selected="">SELECCIONE</option>';
+    $.ajax(
+        {
+            type: "GET",
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: '_token = <?php echo csrf_token() ?>',
+            success: function (data) {
+                var result = data['result'];
+                var htmla = '';
+                for (var i = 0; i < result.length; i++) {
+                    htmla = '<option value="' + result[i]['pCod'] + '">' + result[i]['product'] + '</option>';
+                    html = html + htmla;
+                }
+                select.append(html);
+            }
+
+        });
+}
+$('#producto').on('change', function () {
+    var prod=$('#producto').val();
+    var url = "/mantenimiento/obtenerproductoeditar/" + prod;
+    var text;
+    $.ajax(
+        {
+            type: "GET",
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: '_token = <?php echo csrf_token() ?>',
+            success: function (data) {
+                    $('#precioc').val(data[0]['pPrecioC']);
+            },beforeSend: function(){
+                //bloquear();
+            },
+
+        });
+});
+$('#adddetc').on('click', function () {
+    var producto = $('#producto');
+    var precioc = $('#precioc').val();
+    var cant = $('#cant').val();
+
+    if (producto.children("option:selected").val().toString() !== '0' && precioc > 0 && cant > 0) {
+
+        var tabl = new Array();
+        tabl["idp"] = producto.children("option:selected").val();
+        tabl["textp"] = producto.children("option:selected").text();
+        tabl["precioc"] = precioc;
+        tabl["cant"] = cant;
+        tabl["subt"] = cant*precioc;
+
+        var ubi = 0;
+        for (var i = 0; i < tab.length; i++) {
+            if (tab[i]['idp'].toString() === tabl['idp'] ) {
+                ubi = 1;
+            }
+        }
+        if (ubi === 0) {
+            tab.push(tabl);
+
+        }
+        tabdetcomp();
+    } else {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            type: 'error',
+            title: 'ocurrio un error!',
+            text: 'Ingrese los valores correctos',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        $('#producto').focus();
+    }
+
+
+});
+function tabdetcomp() {
+    ordenarTabla();
+    $('#tab_detcomp').DataTable({
+            data: tab,
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+
+            destroy: true,
+            decimal: ",",
+            thousands: ".",
+            responsive: true,
+            bAutoWidth: true,
+            dom: 'lBfrtip',
+            buttons: [
+                'excel'
+            ],
+            footerCallback: function (row, data, start, end, display) {
+                var totalAmount = 0;
+                const formatter = new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: 2
+                });
+                for (var i = 0; i < data.length; i++) {
+                    totalAmount += parseFloat(data[i]['subt']);
+                }
+                if ($('#igv').is(':checked')) {
+                    totalAmount=totalAmount+(totalAmount*0.18);
+                }
+                totalAmount = formatter.format(totalAmount);
+                $(this.api().column(3).footer()).html(totalAmount);
+                $(this.api().column(3).footer()).html('<br>');
+                $(this.api().column(3).footer()).html(totalAmount);
+            },
+            columnDefs: [
+                {"targets": 0, "width": "30%", "className": "text-left"},
+                {"targets": 1, "width": "10%", "className": "text-center"},
+                {"targets": 2, "width": "20%", "className": "text-center"},
+                {"targets": 3, "width": "20%", "className": "text-center"},
+                {"targets": 4, "width": "10%", "className": "text-center"},
+            ],
+            columns: [
+                {data: 'textp', name: 'textp'},
+                {data: 'cant', name: 'cant'},
+                {data: 'precioc', name: 'precioc'},
+                {
+                    data: 'subt',
+                    render: $.fn.dataTable.render.number(',', '.', 2)
+                },
+                {
+                    data: function (row) {
+                        return '<tr >\n' +
+                            '<a href="#"  onclick="quitar(' + row.idp+ ')" TITLE="Quitar" >\n' +
+                            '<i class="text-danger fas fa-lg fa-fw m-r-10 fa-minus-circle"> </i></a>\n' +
+                            '</tr>';
+
+                    }
+                }
+            ]
+        }
+    );
+
+}
+function ordenarTabla() {
+
+    tab.sort(sortFunction);
+
+    function sortFunction(a, b) {
+        if (a[0] === b[0]) {
+            return 0;
+        } else {
+            return (a[0] < b[0]) ? -1 : 1;
+        }
+    }
+}
+function quitar( idp) {
+    var ubi = null;
+    for (var i = 0; i < tab.length; i++) {
+        if (tab[i]['idp'].toString() === idp.toString()) {
+            ubi = i;
+        }
+    }
+    tab.splice(ubi, 1);
+    tabdetcomp();
+}
+function addproveedor() {
+    redirect('/mantenimiento/proveedor');
+}
+function addproducto(){
+    redirect('/mantenimiento/producto');
+}
+function enviar() {
+    if (validarFormulario() === 0) {
+        Swal.fire({
+            title: 'Esta seguro(a)?',
+            text: 'Se agregara un nuevo registro',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, acepto',
+            cancelButtonText: 'no, cancelar'
+        }).then((result) => {
+            if (result.value) {
+                var proveed = $('#proveedor').val();
+                var nfactura = $('#nfactura').val();
+                var igv=0;
+                if ($('#igv').is(':checked')) {
+                     igv=1;
+                } else {
+                    igv=0;
+                }
+                var arrpc = [], arrp = [], arrct = [];
+                for (var i = 0; i < tab.length; i++) {
+                    arrpc[i] = tab[i]['precioc'];
+                    arrp[i] = tab[i]['idp'];
+                    arrct[i] = tab[i]['cant'];
+                }
+                var _token = $('meta[name="csrf-token"]').attr('content');
+                arrct = JSON.stringify(arrct);
+                arrp = JSON.stringify(arrp);
+                arrpc = JSON.stringify(arrpc);
+                $.ajax({
+                    url: '/transacciones/storecompra',
+                    type: 'GET',
+                    data: {
+                        _token: CSRF_TOKEN,
+                        proveed: proveed,
+                        nfactura: nfactura,
+                        igv: igv,
+                        arrp:arrp,
+                        arrpc:arrpc,
+                        arrct:arrct,
+                    },
+                    dataType: 'JSON',
+                    success:
+                        function (data) {
+                            if (data['error'] === 0) {
+
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    type: 'success',
+                                    title: 'Registro de compra exitoso',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                                location.reload();
+                            } else {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    type: 'error',
+                                    title: 'ocurrio un error!',
+                                    text: data['error'],
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    ,
+                    beforeSend: function () {
+                        $('#enviar').prop("disabled", true);
+                    }
+                });
+
+            }
+        });
+    }else{
+        operacionSubsanar();
+    }
+}
+$("#igv").on('change', function () {
+    if ($(this).is(':checked')) {
+        tabdetcomp();
+    } else {
+        tabdetcomp();
+    }
+});
+function tablaCompra(){
+    $('#tabla_compra').DataTable({
+            ajax: '/transacciones/obtenercompra',
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            orderCellsTop: true,
+            processing: false,
+            serverSide: false,
+            ordering: false,
+            select: true,
+            destroy: true,
+            responsive: true,
+            bAutoWidth: true,
+            dom: 'lBfrtip',
+            buttons: [
+                'excel', 'pdf'
+            ],
+            columnDefs: [
+                {"targets": 0, "width": "10%", "className": "text-center"},
+                {"targets": 1, "width": "15%", "className": "text-left"},
+                {"targets": 2, "width": "15%", "className": "text-center"},
+                {"targets": 3, "width": "5%", "className": "text-center"},
+                {"targets": 4, "width": "15%", "className": "text-left"},
+                {"targets": 5, "width": "15%", "className": "text-right"},
+                {"targets": 6, "width": "10%", "className": "text-right"},
+                {"targets": 7, "width": "10%", "className": "text-right"},
+                {"targets": 8, "width": "10%", "className": "text-center"},
+                {"targets": 9, "width": "10%", "className": "text-center"},
+                {"targets": 10, "width": "10%", "className": "text-center"},
+            ],
+
+            columns: [
+                {data: 'codcomp', name: 'codcomp'},
+                {data: 'pvRazonS', name: 'pvRazonS'},
+                {data: 'cNFactura', name: 'cNFactura'},
+                {
+                    data: function (row) {
+                        return parseInt(row.cIgv) === 0 ? '<span class="text-danger">NO</span>' : '<span class="text-success">SI</span>'
+
+                    }
+                },
+                {data: 'product', name: 'product'},
+                {data: 'cpCant', name: 'cpCant'},
+                {data: 'cpPrecioC', name: 'cpPrecioC'},
+                {data: 'total', name: 'total'},
+                {data: 'cFecCrea', name: 'cFecCrea'},
+                {
+                    data: function (row) {
+                        return parseInt(row.cEst) === 0 ? '<span class="text-danger">ELIMINADO</span>' : '<span class="text-success">ACTIVO</span>'
+
+                    }
+                },
+                {
+                    data: function (row) {
+                        if (parseInt(row.cpEst) === 1) {
+                            return '<tr >\n' +
+                                '<a href="#" style="color: red" TITLE="Eliminar producto" onclick="eliminarCompra(1, '+ row.cpCod + ')">' +
+                                '<i class="fas fa-lg fa-fw m-r-10 fa-trash"> </i></a>\n' +
+                                '</tr>';
+                        } else {
+                            return '<tr >\n' +
+                                '<a href="#" style="color: green" TITLE="Activar producto" onclick="eliminarCompra(0,' + row.cpCod + ')">\n' +
+                                '<i class="fas fa-lg fa-fw m-r-10 fa-check"> </i></a>\n' +
+                                '</tr>';
+                        }
+                    }
+                }
+
+            ]
+        }
+    );
+
+}
+
+function validarFormulario() {
+    var inicio = 'Por favor';
+    var text;
+    var cont = 0;
+    if ($('#producto').val() !== '0') {
+        validarCaja('producto', 'valproducto', 'Correcto', 1);
+    } else {
+        cont++;
+        text = inicio + ' Ingresa Producto';
+        validarCaja('producto', 'valproducto', text, 0);
+        $('#producto').focus();
+    }
+    if ($('#nfactura').val() !== '') {
+        validarCaja('nfactura', 'valnfactura', 'Correcto', 1);
+    } else {
+        cont++;
+        text = inicio + ' Ingresa Numero de Factura';
+        validarCaja('nfactura', 'valnfactura', text, 0);
+        $('#nfactura').focus();
+    }
+    if ($('#proveedor').val() !== '') {
+        validarCaja('proveedor', 'valproveedor', 'Correcto', 1);
+    } else {
+        cont++;
+        text = inicio + ' Ingresa Numero de Factura';
+        validarCaja('proveedor', 'valproveedor', text, 0);
+        $('#proveedor').focus();
+    }
+
+    return cont;
+}
+function eliminarCompra(est,idprod){
+    var url = "/transacciones/deletecompra/"+est+"/" + idprod;
+    Swal.fire({
+        title: 'Esta seguro(a)?',
+        text: 'Se eliminara/restaurara producto comprado',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, acepto',
+        cancelButtonText: 'no, cancelar'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: url,
+                    cache: false,
+                    dataType: 'json',
+                    data: '_token = <?php echo csrf_token() ?>',
+                    success: function (data) {
+                        if (data['error'] === 0) {
+                            tablaCompra();
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                type: 'success',
+                                title: 'Producto eliminado/restaurado correctamente!',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        } else {
+                            tablaCompra();
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                type: 'error',
+                                title: 'ocurrio un error!',
+                                text: data['error'],
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                        }
+                    }
+
+                });
+
+        }
+    })
+}
