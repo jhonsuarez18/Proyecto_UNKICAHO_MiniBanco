@@ -740,6 +740,9 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     Route::get('/agregartipoproducto', function () {
         return view('intranet.mantenimiento.agregartipproducto');
     });
+    Route::get('/agregarapoderado', function () {
+        return view('intranet.mantenimiento.agregarapoderado');
+    });
     Route::get('/agregarproveedor', function () {
         $vi=0;
         return view('intranet.mantenimiento.agregarproveedor')->with(array('vi' => $vi));
@@ -800,11 +803,28 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     Route::get('/deleteclien/{id}', 'ClienteController@destroy');//Agregado 14-09-2023
     Route::get('/client', 'ClienteController@obtenerCliente');
     Route::get('/cliente', 'ClienteController@index');
+
+    //APODERADO
+    Route::get('/getcliente', 'ProveedorController@getProveedor');//Agregado 14-09-2023
+    Route::get('/getApoderDni/{dni}', 'ApoderadoController@getApoderadoDni');
+    Route::get('/storecliente', 'ClienteController@store');//Agregado 14-09-2023
+    Route::get('/updatecliente', 'ClienteController@update');//Agregado 14-09-2023
+    Route::get('/obtenerApoderado', 'ApoderadoController@getApoderados');
+    Route::get('/obtenerproveedoreditar/{id}', 'ProveedorController@obtenerProveedorEditar');//Agregado 14-09-2023
+    Route::get('/deleteclien/{id}', 'ClienteController@destroy');//Agregado 14-09-2023
+    Route::get('/client', 'ClienteController@obtenerCliente');
+    Route::get('/cliente', 'ClienteController@index');
     //PRESENTACION
     Route::get('/getpresentacion', 'PresentacionController@getPresentacion');//Agregado 14-09-2023
 
     //UNIDAD DE MEDIDA
     Route::get('/getunidm', 'UnidadMedidaController@getUnidM');//Agregado 14-09-2023
+
+    //GRADO DE INSTRUCCION
+    Route::get('/getgradinst', 'GradoInstruccionController@getGradInst');
+
+    //ESTADO CIVIL
+    Route::get('/getestadcivi', 'EstadoCivilController@getEstCivi');
 
     //BENEFICIARIO
     Route::get('/getbenef/{dni}/{nomb}', 'ReAfiliadoController@getbenefi');//Agregado 11-04-2024
