@@ -823,6 +823,9 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     //GRADO DE INSTRUCCION
     Route::get('/getgradinst', 'GradoInstruccionController@getGradInst');
 
+    //GRADO DE ACADEMICO
+    Route::get('/getgradacad', 'GradoAcademicoController@getGradAcad');
+
     //ESTADO CIVIL
     Route::get('/getestadcivi', 'EstadoCivilController@getEstCivi');
 

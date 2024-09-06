@@ -17,6 +17,7 @@ $(document).ready(function () {
     provincia('provacte',1,0);
     getTipoDoc('tipdocap',0);
     getGradInst();
+    getGradAcad();
     getEstadCivi()
     tablaApoderados();
 });
@@ -35,6 +36,28 @@ function getGradInst() {
                 var htmla = '';
                 for (var i = 0; i < data.length; i++) {
                     htmla = '<option value="' + data[i]['giId'] + '">' + data[i]['giDesc'] + '</option>';
+                    html = html + htmla;
+                }
+                select.append(html);
+            }
+
+        });
+}
+function getGradAcad() {
+    var url = "/mantenimiento/getgradacad";
+    var select = $('#gradiap').html('');
+    var html = '<option value="0" selected="">SELECCIONE</option>';
+    $.ajax(
+        {
+            type: "GET",
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: '_token = <?php echo csrf_token() ?>',
+            success: function (data) {
+                var htmla = '';
+                for (var i = 0; i < data.length; i++) {
+                    htmla = '<option value="' + data[i]['gaId'] + '">' + data[i]['gaDesc'] + '</option>';
                     html = html + htmla;
                 }
                 select.append(html);
