@@ -38,6 +38,8 @@
 <br>
 <br>
 <div id="response">
+    <input id="idvi" value="{{$vi}}" hidden>
+    <input id="idapo" value="{{$vi}}" hidden>
     <!-- final cabecera -->
 
     <!-- begin panel -->
@@ -282,17 +284,25 @@
                             </legend>
                             <hr>
                             <div class="col-xl-12 col-sm-12 col-xs-12 row ">
-                                <input type="text" id="idAl"hidden/>
-                                <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="tipdocal">TIPO DOCUMENTO
-                                        <req>*</req>
-                                    </label>
-                                    <select class="form-control form-control-sm" id="tipdocal">
-
-                                    </select>
-                                    <div id="validtipodocal"></div>
+                                <div class="col-xl-8 col-sm-8 col-xs-8">
+                                    <div class="form-group-lg">
+                                        <input id="idalapo" value="0" type="text" hidden>
+                                        <label for="client">ALUMNO
+                                        </label>
+                                        <div class="input-group m-b-10">
+                                            <input id="alumnapo" class="form-control form-control-sm" type="text">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-primary btn-sm" title="click para agregar Alumno"  onclick="addalumnoapo()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"></path>
+                                                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="hide " id="valclient"></div>
+                                    </div>
                                 </div>
-
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
                                     <label for="dnial">N&#35; DOC
                                         <req>*</req>
@@ -301,45 +311,34 @@
                                            onchange="validDniAlumno()" disabled/>
                                     <div class="hide " id="validDnial"></div>
                                 </div>
-                                <div class="col-xl-4 col-sm-4 col-xs-4" id="hidappaterno">
-                                    <label for="appaternoal">APPATERNO
+                                <div class="col-xl-8 col-sm-8 col-xs-8" id="hidappaterno">
+                                    <label for="alumnoapo">APELLIDOS Y NOMBRES
                                         <req>*</req>
                                     </label>
-                                    <input id="appaternoal" type="text" class="form-control form-control-sm" autocomplete="off"
+                                    <input id="alumnoapo" type="text" class="form-control form-control-sm" autocomplete="off"
                                            disabled onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valappaternoal"></div>
-                                </div>
-                                <div class="col-xl-4 col-sm-4 col-xs-4"  id="hidapmaterno">
-                                    <label for="apmaternoal">APMATERNO
-                                        <req>*</req>
-                                    </label>
-                                    <input id="apmaternoal" type="text" class="form-control form-control-sm" autocomplete="off"
-                                           disabled onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valapmaternoal"></div>
-                                </div>
-                                <div class="col-xl-4 col-sm-4 col-xs-4"  id="hidnombres">
-                                    <label for="nombresal">NOMBRES
-                                        <req>*</req>
-                                    </label>
-                                    <input id="nombresal" type="text" class="form-control form-control-sm" autocomplete="off"
-                                           disabled  onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valnombresal"></div>
+                                    <div class="hide " id="valalumnoapo"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4" id="hidfecnac">
-                                    <label for="fecnacal">FECNAC
+                                    <label for="fecnacal">FECHA NACIMIENTO
                                         <req></req>
                                     </label>
-                                    <input type="text" class="form-control form-control-sm" id="fecnacal" autocomplete="off">
+                                    <input type="text" class="form-control form-control-sm" id="fecnacal" disabled autocomplete="off">
                                     <div class="hide " id="valfecnacal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
                                     <label for="grdaal">GRADO ACADEMICO
                                         <req>*</req>
                                     </label>
-                                    <select class="form-control form-control-sm" id="grdaal" disabled>
-                                        <option selected value="0">SELECCIONE</option>
-                                    </select>
+                                    <input type="text" class="form-control form-control-sm" id="grdaal" disabled autocomplete="off">
                                     <div class="hide " id="valgradaal"></div>
+                                </div>
+                                <div class="col-xl-4 col-sm-4 col-xs-4">
+                                    <label for="seccal">SECCION
+                                        <req>*</req>
+                                    </label>
+                                    <input type="text" class="form-control form-control-sm" id="seccal" disabled autocomplete="off">
+                                    <div class="hide " id="valseccal"></div>
                                 </div>
                                 <div class="col-xl-1 col-xs-1 col-sm-1  btn-group-justified">
                                     <label for="addalumno">

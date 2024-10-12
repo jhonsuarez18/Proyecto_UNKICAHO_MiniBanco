@@ -1,16 +1,17 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 $(document).ready(function () {
-    tablaVenta();
+    tablaRecepcion();
+    console.log($('#idvi').val());
     if(parseInt($('#idvi').val())===1){
-        $('#modal-dialog_add_venta').modal({show: true, backdrop:'static', keyboard: false});
+        $('#modal-dialog_add_recepcion').modal({show: true, backdrop:'static', keyboard: false});
         //getProveedor();
         getProducto();
     }
 });
 var tab = [];
-$("#addventa").on('click', function () {
+$("#addrecepcion").on('click', function () {
     window.event.preventDefault();
-    $('#modal-dialog_add_venta').modal({show: true, backdrop:'static', keyboard: false});
+    $('#modal-dialog_add_recepcion').modal({show: true, backdrop:'static', keyboard: false});
     //getProveedor();
     getProducto();
 });
@@ -35,12 +36,12 @@ $('#producto').on('change', function () {
 
         });
 });
-$('#client').typeahead({
+$('#alumn').typeahead({
     name: 'data',
     displayKey: 'name',
     source: function (query, process) {
         $.ajax({
-            url: "/mantenimiento/client",
+            url: "/mantenimiento/alumn",
             type: 'GET',
             data: 'query=' + query,
             dataType: 'JSON',
@@ -50,8 +51,8 @@ $('#client').typeahead({
                 bondNames = [];
                 $.each(data, function (i, item) {
                     bondNames.push({
-                        id: item.clId,
-                        name: item.person,
+                        id: item.alId,
+                        name: item.alumno,
                     });
                 });
                 process(bondNames);
@@ -59,7 +60,7 @@ $('#client').typeahead({
         });
     }
     , updater: function (item) {
-        let idcentp = $('#idcl');
+        let idcentp = $('#idal');
         idcentp.val('');
         idcentp.val(item.id);
         return item;
@@ -121,8 +122,8 @@ $("#benefise").on('change', function () {
         //$('#dniben').val(0);
     }
 });
-function addcliente(){
-    redirect('/mantenimiento/cliente');
+function addalumno(){
+    redirect('/mantenimiento/alumno/1');
 }
 /*function valCliDni() {
     var dni = $('#idcl').val();
@@ -328,7 +329,7 @@ function enviarrec() {
             cancelButtonText: 'no, cancelar'
         }).then((result) => {
             if (result.value) {
-                var idcliente = $('#idcl').val();
+                var idalumno = $('#idal').val();
                 var cantval = 0;
                 var precval = 0;
                 var arrpv = [], arrp = [], arrct = [];
@@ -342,11 +343,11 @@ function enviarrec() {
                 arrp = JSON.stringify(arrp);
                 arrpv = JSON.stringify(arrpv);
                 $.ajax({
-                    url: '/transacciones/storeventa',
+                    url: '/transacciones/storerecepcion',
                     type: 'GET',
                     data: {
                         _token: CSRF_TOKEN,
-                        idcli: idcliente,
+                        idalum: idalumno,
                         arrp:arrp,
                         arrpv:arrpv,
                         arrct:arrct,
@@ -367,6 +368,7 @@ function enviarrec() {
                                     timer: 3000
                                 });
                                 location.reload();
+                                $('#idvi').val(0);
                             } else {
                                 Swal.fire({
                                     position: 'top-end',
@@ -392,9 +394,9 @@ function enviarrec() {
         operacionSubsanar();
     }
 }
-function tablaVenta(){
-    $('#tabla_venta').DataTable({
-            ajax: '/transacciones/obtenerventa',
+function tablaRecepcion(){
+    $('#tabla_recepcion').DataTable({
+            ajax: '/transacciones/obtenerrecepcion',
             language: {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
@@ -423,29 +425,29 @@ function tablaVenta(){
             ],
 
             columns: [
-                {data: 'codvent', name: 'codvent'},
-                {data: 'cliente', name: 'cliente'},
+                {data: 'codrecep', name: 'codrecep'},
+                {data: 'alumno', name: 'alumno'},
                 {data: 'product', name: 'product'},
-                {data: 'vpCant', name: 'vpCant'},
-                {data: 'vpPrecioV', name: 'vpPrecioV'},
+                {data: 'rcpCant', name: 'rcpCant'},
+                {data: 'rcpPrecioV', name: 'rcpPrecioV'},
                 {data: 'total', name: 'total'},
-                {data: 'vFecCrea', name: 'vFecCrea'},
+                {data: 'rcFecCrea', name: 'rcFecCrea'},
                 {
                     data: function (row) {
-                        return parseInt(row.vEst) === 0 ? '<span class="text-danger">ELIMINADO</span>' : '<span class="text-success">ACTIVO</span>'
+                        return parseInt(row.rcEst) === 0 ? '<span class="text-danger">ELIMINADO</span>' : '<span class="text-success">ACTIVO</span>'
 
                     }
                 },
                 {
                     data: function (row) {
-                        if (parseInt(row.vpEst) === 1) {
+                        if (parseInt(row.rcpEst) === 1) {
                             return '<tr >\n' +
-                                '<a href="#" style="color: red" TITLE="Eliminar producto" onclick="eliminarVenta(1, '+ row.vpCod + ')">' +
+                                '<a href="#" style="color: red" TITLE="Eliminar producto" onclick="eliminarVenta(1, '+ row.rcpCod + ')">' +
                                 '<i class="fas fa-lg fa-fw m-r-10 fa-trash"> </i></a>\n' +
                                 '</tr>';
                         } else {
                             return '<tr >\n' +
-                                '<a href="#" style="color: green" TITLE="Activar producto" onclick="eliminarVenta(0,' + row.vpCod + ')">\n' +
+                                '<a href="#" style="color: green" TITLE="Activar producto" onclick="eliminarVenta(0,' + row.rcpCod + ')">\n' +
                                 '<i class="fas fa-lg fa-fw m-r-10 fa-check"> </i></a>\n' +
                                 '</tr>';
                         }

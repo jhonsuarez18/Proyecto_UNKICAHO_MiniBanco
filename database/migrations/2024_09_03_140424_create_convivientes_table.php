@@ -16,15 +16,7 @@ class CreateConvivientesTable extends Migration
         Schema::create('conviviente', function (Blueprint $table) {
             $table->collate = 'latin1_spanish_ci';
             $table->bigIncrements('cvId')->unique();
-            $table->unsignedBigInteger('idDt');
-            $table->unsignedBigInteger('idTD');
-            $table->string('cvNombres')->nullable();
-            $table->string('cvAPPaterno')->nullable();
-            $table->string('cvAPMaterno')->nullable();
-            $table->string('cvTelefono')->nullable();
-            $table->string('cvNumeroDoc')->nullable();
-            $table->string('cvDireccion')->nullable();
-            $table->date('cvFecNac')->nullable();
+            $table->unsignedBigInteger('idPe');
             $table->timestamp('cvFecCreacion');
             $table->dateTime('cvFecActualiza')->nullable();
             $table->integer('cvUsuReg');
@@ -32,8 +24,7 @@ class CreateConvivientesTable extends Migration
             $table->integer('cvEstado')->default(1);
         });
         Schema::table('conviviente', function ($table) {
-            $table->foreign('idDT')->references('dtId')->on('distrito');
-            $table->foreign('idTD')->references('tdId')->on('tipo_doc');
+            $table->foreign('idPe')->references('peId')->on('persona');
         });
     }
 
@@ -44,6 +35,6 @@ class CreateConvivientesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('convivientes');
+        Schema::dropIfExists('conviviente');
     }
 }

@@ -16,7 +16,13 @@ class ApoderadoController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $vi = 1;
+            return view('intranet.mantenimiento.agregarapoderado')->with(array('vi' => $vi));
+        } catch (\Exception $e) {
+            SErrorController::saveerror($e->getMessage(), "ApoderadoController", "index");
+            return response(array('error' => $e->getMessage()));
+        }
     }
 
     /**

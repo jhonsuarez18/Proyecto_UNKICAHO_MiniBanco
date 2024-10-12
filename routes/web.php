@@ -741,7 +741,8 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
         return view('intranet.mantenimiento.agregartipproducto');
     });
     Route::get('/agregarapoderado', function () {
-        return view('intranet.mantenimiento.agregarapoderado');
+        $vi=0;
+        return view('intranet.mantenimiento.agregarapoderado')->with(array('vi' => $vi));
     });
     Route::get('/agregarproveedor', function () {
         $vi=0;
@@ -753,7 +754,7 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     });
     Route::get('/agregaralumno', function () {
         $vi=0;
-        return view('intranet.mantenimiento.agregarcliente')->with(array('vi' => $vi));
+        return view('intranet.mantenimiento.agregaralumno')->with(array('vi' => $vi));
     });
 
 
@@ -804,6 +805,17 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     Route::get('/client', 'ClienteController@obtenerCliente');
     Route::get('/cliente', 'ClienteController@index');
 
+    //ALUMNO
+    Route::get('/getcliente', 'ProveedorController@getProveedor');
+    Route::get('/getAlumnDni/{dni}', 'AlumnoController@getAlumnoDni');
+    Route::get('/storealumno', 'AlumnoController@store');
+    Route::get('/updatecliente', 'ClienteController@update');
+    Route::get('/obteneralumno', 'AlumnoController@getAlumnos');
+    Route::get('/obtenerproveedoreditar/{id}', 'ProveedorController@obtenerProveedorEditar');
+    Route::get('/deleteclien/{id}', 'ClienteController@destroy');
+    Route::get('/alumn', 'AlumnoController@obtenerAlumno');
+    Route::get('/alumno/{id}', 'AlumnoController@index');
+
     //APODERADO
     Route::get('/getcliente', 'ProveedorController@getProveedor');//Agregado 14-09-2023
     Route::get('/getApoderDni/{dni}', 'ApoderadoController@getApoderadoDni');
@@ -813,7 +825,7 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
     Route::get('/obtenerproveedoreditar/{id}', 'ProveedorController@obtenerProveedorEditar');//Agregado 14-09-2023
     Route::get('/deleteclien/{id}', 'ClienteController@destroy');//Agregado 14-09-2023
     Route::get('/client', 'ClienteController@obtenerCliente');
-    Route::get('/cliente', 'ClienteController@index');
+    Route::get('/apoderado', 'ApoderadoController@index');
     //PRESENTACION
     Route::get('/getpresentacion', 'PresentacionController@getPresentacion');//Agregado 14-09-2023
 
@@ -822,6 +834,15 @@ Route::group(array('prefix' => 'mantenimiento', 'middleware' => 'auth'), functio
 
     //GRADO DE INSTRUCCION
     Route::get('/getgradinst', 'GradoInstruccionController@getGradInst');
+
+    //GRADO DE ACADEMICO
+    Route::get('/getgradacad', 'GradoAcademicoController@getGradAcad');
+
+    //PARENTESCO
+    Route::get('/getparent', 'ParentescoController@getParent');
+
+    //GRADO DE ACADEMICO_SECCION
+    Route::get('/getseccion/{idg}', 'GradoSeccionController@obtenerSeccion');
 
     //ESTADO CIVIL
     Route::get('/getestadcivi', 'EstadoCivilController@getEstCivi');
@@ -841,10 +862,9 @@ Route::group(array('prefix' => 'transacciones', 'middleware' => 'auth'), functio
         $vi=0;
         return view('intranet.transacciones.compra')->with(array('vi' => $vi));
     });
-    Route::get('/venta', function () {
+    Route::get('/recepcion', function () {
         $vi=0;
-        return view('intranet.transacciones.venta')->with(array('vi' => $vi));
-        //return view('intranet.transacciones.venta');
+        return view('intranet.transacciones.recepcion')->with(array('vi' => $vi));
     });
     Route::get('/agregarproveedor', function () {
         return view('intranet.mantenimiento.agregarproveedor');
@@ -868,6 +888,12 @@ Route::group(array('prefix' => 'transacciones', 'middleware' => 'auth'), functio
     Route::get('/obtenerventa', 'VentaController@obtenerVenta');//Agregado 14-09-2023
     Route::get('/deleteventa/{est}/{id}', 'VentaController@destroy');//Agregado 14-09-2023
     Route::get('/ventas', 'VentaController@index');
+
+    //RECEPCION
+    Route::get('/storerecepcion', 'RecepcionController@store');
+    Route::get('/obtenerrecepcion', 'RecepcionController@obtenerRecepcion');
+    Route::get('/deleterecepcion/{est}/{id}', 'RecepcionController@destroy');
+    Route::get('/recepc', 'RecepcionController@index');
 
 });
 //rutas para nodulo combustible

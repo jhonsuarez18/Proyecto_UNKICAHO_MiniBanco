@@ -13,20 +13,11 @@ class CreateAlumnosTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('alumno', function (Blueprint $table) {
+        Schema::create('alumno', function (Blueprint $table) {
             $table->collate = 'latin1_spanish_ci';
             $table->bigIncrements('alId')->unique();
-            $table->unsignedBigInteger('idDt');
-            $table->unsignedBigInteger('idTD');
-            $table->unsignedBigInteger('idGA');
-            $table->unsignedBigInteger('idPRT');
-            $table->string('alNombres')->nullable();
-            $table->string('alAPPaterno')->nullable();
-            $table->string('alAPMaterno')->nullable();
-            $table->string('alTelefono')->nullable();
-            $table->string('alNumeroDoc')->nullable();
-            $table->string('alDireccion')->nullable();
-            $table->date('alFecNac')->nullable();
+            $table->unsignedBigInteger('idGS');
+            $table->unsignedBigInteger('idPe');
             $table->timestamp('alFecCreacion');
             $table->dateTime('alFecActualiza')->nullable();
             $table->integer('alUsuReg');
@@ -34,11 +25,9 @@ class CreateAlumnosTable extends Migration
             $table->integer('alEstado')->default(1);
         });
         Schema::table('alumno', function ($table) {
-            $table->foreign('idDT')->references('dtId')->on('distrito');
-            $table->foreign('idTD')->references('tdId')->on('tipo_doc');
-            $table->foreign('idGA')->references('gaId')->on('grado_academico');
-            $table->foreign('idPRT')->references('prtId')->on('parentesco');
-        });*/
+            $table->foreign('idGS')->references('gsId')->on('grado_seccion');
+            $table->foreign('idPe')->references('peId')->on('persona');
+        });
     }
 
     /**

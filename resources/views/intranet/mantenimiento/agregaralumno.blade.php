@@ -58,8 +58,8 @@
 
         <div class="panel-body">
             <div class="col-xl-12  ">
-                <button id="addcliente" class="btn btn-success " title="click para agregar cliente"
-                        data-toggle="modal" data-target="#modal_dialog_add_cliente">
+                <button id="addalumno" class="btn btn-success " title="click para agregar alumno"
+                        data-toggle="modal" data-target="#modal_dialog_add_alumno">
                     <i class="fas fa-lg fa-fw m-r-10 fa-plus-circle"></i>Agregar Alumno
                 </button>
             </div>
@@ -70,7 +70,7 @@
 
         <!----------------------------------------INICIO MODAL AGREGAR ALUMNO---------------------------------------->
         <div class="col-xl-12">
-            <div class="modal fade" id="modal_dialog_add_cliente">
+            <div class="modal fade" id="modal_dialog_add_alumno">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -88,69 +88,79 @@
                             <div class="col-xl-12 col-sm-12 col-xs-12 row ">
                                 <input type="text" id="idperson"hidden/>
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="tipdoccl">TIPO DOCUMENTO
+                                    <label for="tipdocal">TIPO DOCUMENTO
                                         <req>*</req>
                                     </label>
-                                    <select class="form-control form-control-sm" id="tipdoccl">
+                                    <select class="form-control form-control-sm" id="tipdocal">
 
                                     </select>
-                                    <div id="validtipodoccl"></div>
+                                    <div id="validtipodocal"></div>
                                 </div>
 
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="dnicl">N&#35; DOC
+                                    <label for="dnial">N&#35; DOC
                                         <req>*</req>
                                     </label>
-                                    <input id="dnicl" type="number" class="form-control form-control-sm" autocomplete="off"
-                                           onchange="validDniClient()" disabled/>
-                                    <div class="hide " id="validDnicl"></div>
+                                    <input id="dnial" type="number" class="form-control form-control-sm" autocomplete="off"
+                                           onchange="validDniAlumno()" disabled/>
+                                    <div class="hide " id="validDnial"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4" id="hidappaterno">
-                                    <label for="appaternocl">APPATERNO
+                                    <label for="appaternoal">APPATERNO
                                         <req>*</req>
                                     </label>
-                                    <input id="appaternocl" type="text" class="form-control form-control-sm" autocomplete="off"
+                                    <input id="appaternoal" type="text" class="form-control form-control-sm" autocomplete="off"
                                              disabled onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valappaternocl"></div>
+                                    <div class="hide " id="valappaternoal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4"  id="hidapmaterno">
-                                    <label for="apmaternocl">APMATERNO
+                                    <label for="apmaternoal">APMATERNO
                                         <req>*</req>
                                     </label>
-                                    <input id="apmaternocl" type="text" class="form-control form-control-sm" autocomplete="off"
+                                    <input id="apmaternoal" type="text" class="form-control form-control-sm" autocomplete="off"
                                             disabled onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valapmaternocl"></div>
+                                    <div class="hide " id="valapmaternoal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4"  id="hidnombres">
-                                    <label for="nombrescl">NOMBRES
+                                    <label for="nombresal">NOMBRES
                                         <req>*</req>
                                     </label>
-                                    <input id="nombrescl" type="text" class="form-control form-control-sm" autocomplete="off"
+                                    <input id="nombresal" type="text" class="form-control form-control-sm" autocomplete="off"
                                           disabled  onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valnombrescl"></div>
-                                </div>
-                                <div class="col-xl-4 col-sm-4 col-xs-4" hidden="true" id="hidrazons">
-                                    <label for="razonscl">RAZON SOCIAL
-                                        <req>*</req>
-                                    </label>
-                                    <input id="razonscl" type="text" class="form-control form-control-sm" autocomplete="off"
-                                           disabled onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div class="hide " id="valrazonscl"></div>
+                                    <div class="hide " id="valnombresal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4" id="hidfecnac">
-                                    <label for="fecnaccl">FECNAC
+                                    <label for="fecnacal">FECNAC
                                         <req></req>
                                     </label>
-                                    <input type="text" class="form-control form-control-sm" id="fecnaccl" autocomplete="off">
-                                    <div class="hide " id="valfecnaccl"></div>
+                                    <input type="text" class="form-control form-control-sm" id="fecnacal" autocomplete="off">
+                                    <div class="hide " id="valfecnacal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="telefocl">TELEFONO
+                                    <label for="telefoal">TELEFONO
                                     </label>
-                                    <input id="telefocl" type="number" class="form-control form-control-sm"
-                                           onchange="validCelular('telefocl','valtelefocl','enviarclient')"
+                                    <input id="telefoal" type="number" class="form-control form-control-sm"
+                                           onchange="validCelular('telefoal','valtelefoal','enviaralumno')"
                                            autocomplete="off"/>
-                                    <div class="" id="valtelefocl"></div>
+                                    <div class="" id="valtelefoal"></div>
+                                </div>
+                                <div class="col-xl-4 col-sm-4 col-xs-4">
+                                    <label for="gradacal">GRADO ACADEMICO
+                                        <req>*</req>
+                                    </label>
+                                    <select class="form-control form-control-sm" id="gradacal">
+
+                                    </select>
+                                    <div id="validgradacal"></div>
+                                </div>
+                                <div class="col-xl-4 col-sm-4 col-xs-4">
+                                    <label for="seccial">SECCION
+                                        <req>*</req>
+                                    </label>
+                                    <select class="form-control form-control-sm" id="seccial">
+
+                                    </select>
+                                    <div id="validseccial"></div>
                                 </div>
                                 <hr>
 
@@ -161,38 +171,38 @@
                             <hr>
                             <div class="col-xl-12 col-sm-12 col-xs-12 row ">
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="deparcl">DEPARTAMENTO
+                                    <label for="deparal">DEPARTAMENTO
                                         <req>*</req>
                                     </label>
-                                    <select class="form-control form-control-sm" id="deparcl">
+                                    <select class="form-control form-control-sm" id="deparal">
                                         <option selected>AMAZONAS</option>
                                     </select>
-                                    <div class="hide " id="valdeparcl"></div>
+                                    <div class="hide " id="valdeparal"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="provcl">PROVINCIA
+                                    <label for="proval">PROVINCIA
                                         <req>*</req>
                                     </label>
-                                    <select class="form-control form-control-sm" id="provcl" disabled>
+                                    <select class="form-control form-control-sm" id="proval" disabled>
                                         <option selected value="0">SELECCIONE</option>
                                     </select>
-                                    <div class="hide " id="valprovcl"></div>
+                                    <div class="hide " id="valproval"></div>
                                 </div>
                                 <div class="col-xl-4 col-sm-4 col-xs-4">
-                                    <label for="discl">DISTRITO
+                                    <label for="disal">DISTRITO
                                         <req>*</req>
                                     </label>
-                                    <select class="form-control form-control-sm" id="discl" disabled>
+                                    <select class="form-control form-control-sm" id="disal" disabled>
                                         <option selected value="0">SELECCIONE</option>
                                     </select>
-                                    <div class="hide " id="valdiscl"></div>
+                                    <div class="hide " id="valdisal"></div>
                                 </div>
                                 <div class="col-xl-6 col-sm-6 col-xs-6">
-                                    <label for="dircl">DIRECCION
+                                    <label for="diral">DIRECCION
                                     </label>
-                                    <input id="dircl" type="text" class="form-control form-control-sm"
+                                    <input id="diral" type="text" class="form-control form-control-sm"
                                            onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    <div id="valdircl"></div>
+                                    <div id="valdiral"></div>
                                 </div>
                             </div>
                             <hr>
@@ -200,8 +210,8 @@
                                 <hr>
                                 <a href="javascript:;" class="btn btn-danger" data-dismiss="modal"><i
                                         class="fas fa-lg fa-fw m-r-10 fa-times"></i>Cancelar</a>
-                                <button id="enviarclient" class="btn btn-success " title="click para agregar Cliente
-                    " onclick="enviarCliente()"><i class="fas fa-lg fa-fw m-r-10 fa-save"></i>Guardar
+                                <button id="enviaralumno" class="btn btn-success " title="click para agregar Alumno
+                    " onclick="enviarAlumno()"><i class="fas fa-lg fa-fw m-r-10 fa-save"></i>Guardar
                                 </button>
                             </div>
                         </div>
@@ -215,7 +225,7 @@
                  class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                 <div class="row">
                     <div class="col-sm-12 table-responsive">
-                        <table id="tabla_cliente"
+                        <table id="tabla_alumno"
                                class="table table-striped  table-bordered dataTable no-footer dtr-inline"
                                role="grid"
                                aria-describedby="data-table-fixed-header_info" width="100%">
@@ -234,19 +244,19 @@
                             <thead>
                             <tr role="row">
                                 <th>
-                                    CLIENTE
+                                    ALUMNO
                                 </th>
                                 <th>
                                     DOC. ID.
                                 </th>
                                 <th>
-                                    COD. DIST
+                                    GRADO
+                                </th>
+                                <th>
+                                    SECCION
                                 </th>
                                 <th>
                                     TELEFONO
-                                </th>
-                                <th>
-                                    TIP. DOC
                                 </th>
                                 <th>
                                     FEC. REG
@@ -426,7 +436,7 @@
         $.when(
             $.getScript('../assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'),
             $.getScript('../js/intranet/util.js'),
-            $.getScript('../js/intranet/mantenimiento/agregarcliente.js'),
+            $.getScript('../js/intranet/mantenimiento/agregaralumno.js'),
             $.Deferred(function (deferred) {
                 $(deferred.resolve);
             })
