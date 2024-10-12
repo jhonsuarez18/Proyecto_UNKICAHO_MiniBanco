@@ -16,56 +16,9 @@ $(document).ready(function () {
     departamento('deparap',0);
     provincia('provacte',1,0);
     getTipoDoc('tipdocap',0);
-    getTipoDoc('tipdoccv',0);
     getGradInst();
     getEstadCivi()
     tablaApoderados();
-});
-$('#alumnapo').typeahead({
-    name: 'data',
-    displayKey: 'name',
-    source: function (query, process) {
-        $.ajax({
-            url: "/mantenimiento/alumn",
-            type: 'GET',
-            data: 'query=' + query,
-            dataType: 'JSON',
-            async: 'false',
-            success: function (data) {
-                bondObjs = {};
-                bondNames = [];
-                $.each(data, function (i, item) {
-                    bondNames.push({
-                        id: item.alId,
-                        name: item.alumno,
-                        nom: item.nombres,
-                        nom1: item.alNumeroDoc,
-                        nom2: item.alFecNac,
-                        nom3: item.gaDesc,
-                        nom4: item.sDesc,
-                    });
-                });
-                process(bondNames);
-            }
-        });
-    }
-    , updater: function (item) {
-        let idcentp = $('#idalapo');
-        let alumn = $('#alumnoapo');
-        let dnial = $('#dnial');
-        let fecnacal = $('#fecnacal');
-        let gradal = $('#grdaal');
-        let seccal = $('#seccal');
-        idcentp.val('');
-        idcentp.val(item.id);
-        alumn.val(item.nom);
-        dnial.val(item.nom1);
-        fecnacal.val(item.nom2);
-        gradal.val(item.nom3);
-        seccal.val(item.nom4);
-        return item;
-    }
-
 });
 function getGradInst() {
     var url = "/mantenimiento/getgradinst";
@@ -88,9 +41,6 @@ function getGradInst() {
             }
 
         });
-}
-function addalumnoapo(){
-    redirect('/mantenimiento/alumno/2');
 }
 function getEstadCivi() {
     var url = "/mantenimiento/getestadcivi";
@@ -400,33 +350,6 @@ $('#tipdocap').on('change', function () {
         }
     }
     $('#dniap').focus();
-
-
-});
-$('#tipdoccv').on('change', function () {
-    limpiar_campos();
-    var dni = $('#dnicv');
-    var tipdoc = $('#validDnicv');
-    var tipodocval = $('#validtipodocap');
-    if (this.value === '0') {
-        dni.val('');
-        dni.prop('disabled', true);
-        validarCaja('tipdoccv', 'validDnicv', 'Escoja tipo documento', 0)
-    }
-    else {
-        dni.prop('disabled', false);
-        dni.val('');
-        validarCaja('tipdoccv', 'validDnicv', '', 1)
-    }
-
-    if(parseInt(this.value)===1){
-        blo_desblo_campos(false,true)
-    }else{
-        if(parseInt(this.value)===3){
-            blo_desblo_campos(true,false)
-        }
-    }
-    $('#dnicv').focus();
 
 
 });
